@@ -4,6 +4,9 @@ project(pokertest)
 
 set(EXECUTABLE_OUTPUT_PATH bin/)
 
+include_directories(${PROJECT_SOURCE_DIR}SDL2/include/SDL2)
+link_directories(${PROJECT_SOURCE_DIR}/SDL2/lib/x86)
+
 file(
 
         GLOB_RECURSE
@@ -21,3 +24,5 @@ add_executable(
 	${source_files}
 	
 )
+
+target_link_libraries(testpoker SDL2main SDL2)
