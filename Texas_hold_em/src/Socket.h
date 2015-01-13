@@ -25,7 +25,7 @@ class Socket
 {
     public:
         static void clientSocket(std::string msg, std::string hostname);
-        static void serverSocket();
+        static void* serverSocket(void* arg);
 };
 
 #endif // SOCKET_H

@@ -1,14 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include "future/future.h"
+#include <pthread.h>
 #include "Socket.h"
 
 using namespace std;
 
+void startFunction()
+{
+    pthread_t thread1;
+    pthread_create(&thread1, NULL, &Socket::serverSocket, NULL);
+}
+
 int main(int argc, char *argv[])
 {
-    cout << "Client ou serveur ? \n 1 - Serveur \n 2 - Client" << endl;
+    startFunction();
+    /*cout << "Client ou serveur ? \n 1 - Serveur \n 2 - Client" << endl;
     int choice;
     cin >> choice;
     cin.ignore();
@@ -18,7 +25,7 @@ int main(int argc, char *argv[])
         Socket::serverSocket();
     }
     else if (choice == 2)
-    {
+    {*/
         /*Demande du hostname du receveur*/
         cout << "Hostname :" << endl;
         string hostname;
@@ -42,5 +49,5 @@ int main(int argc, char *argv[])
                 Socket::clientSocket(msg, hostname);
             }
         }
-    }
+    //}
 }
