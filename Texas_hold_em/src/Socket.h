@@ -21,11 +21,13 @@ typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
 
+/*Contient  les fonctions permettant d'étabier une connection entre 2 périphérique*/
+
 class Socket
 {
     public:
         static void clientSocket(std::string msg, std::string hostname);
-        static void* serverSocket(void* arg);
+        static void serverSocket();
 };
 
 #endif // SOCKET_H

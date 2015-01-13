@@ -2,52 +2,22 @@
 #include <stdlib.h>
 #include <iostream>
 #include <pthread.h>
-#include "Socket.h"
+
+#include "Services.h"
 
 using namespace std;
 
-void startFunction()
-{
-    pthread_t thread1;
-    pthread_create(&thread1, NULL, &Socket::serverSocket, NULL);
-}
-
 int main(int argc, char *argv[])
 {
-    startFunction();
-    /*cout << "Client ou serveur ? \n 1 - Serveur \n 2 - Client" << endl;
-    int choice;
-    cin >> choice;
-    cin.ignore();
+    /*créer les thread serveur et messagerie*/
+    pthread_t server_thread;
+    pthread_t client_thread;
 
-    if(choice == 1)
-    {
-        Socket::serverSocket();
-    }
-    else if (choice == 2)
-    {*/
-        /*Demande du hostname du receveur*/
-        cout << "Hostname :" << endl;
-        string hostname;
-        getline(cin,hostname);
+    /*lance les threads*/
+    pthread_create(&server_thread, NULL, &Services::sendMessenger, NULL);
+    pthread_create(&client_thread, NULL, &Services::startServer, NULL);
 
-        bool exit = false;
-
-        while(!exit){
-            /*demande du message*/
-            cout << "message :";
-            string msg;
-            getline(cin,msg);
-
-            if(!msg.compare("exit"))
-            {
-                Socket::clientSocket("Client à quitté la conversation", hostname);
-                cout << "Arrêt de la conversation" << endl;
-                exit = true;
-            }else
-            {
-                Socket::clientSocket(msg, hostname);
-            }
-        }
-    //}
+    /*synchronisation de threads, attend la fin des threads pour continuer le programmes*/
+    pthread_join(server_thread, NULL);
+    pthread_join(client_thread, NULL);
 }

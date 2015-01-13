@@ -5,7 +5,7 @@ using namespace std;
 void Socket::clientSocket(string msg, string hostname)
 {
     /*******à supprimer !!!**/
-    /****/hostname = "127.0.0.1";
+    /****///hostname = "127.0.0.1";
     /****************************/
 
     //déclaration de la socket
@@ -45,7 +45,7 @@ void Socket::clientSocket(string msg, string hostname)
 }
 
 
-void* Socket::serverSocket(void* arg)
+void Socket::serverSocket()
 {
     //déclaration de la socket
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -63,11 +63,11 @@ void* Socket::serverSocket(void* arg)
 
     sin.sin_port = htons(PORT);
 
-    /*if(bind (sock, (SOCKADDR *) &sin, sizeof sin) == SOCKET_ERROR)
+    if(bind (sock, (SOCKADDR *) &sin, sizeof sin) == SOCKET_ERROR)
     {
         perror("bind()");
         exit(EXIT_FAILURE);
-    }*/
+    }
 
     //écoute des connexions
     if(listen(sock, 5) == SOCKET_ERROR)
@@ -81,8 +81,9 @@ void* Socket::serverSocket(void* arg)
 
     socklen_t sinsize = sizeof csin;
 
-    /*Stop sur cette fonciton pour l'écoute*/
-    while(true){
+    /*Stop sur cette fonction pour l'écoute*/
+    while(true)
+    {
         csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
 
         if(csock == INVALID_SOCKET)
