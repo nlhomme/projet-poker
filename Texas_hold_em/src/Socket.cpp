@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void Socket::clientSocket(string msg)
+void Socket::clientSocket(string msg, string hostname)
 {
     cout << "CLIENT" << endl;
     //déclaration de la socket
@@ -16,11 +16,6 @@ void Socket::clientSocket(string msg)
 
     struct hostent *hostinfo = NULL;
     SOCKADDR_IN sin = {0}; //initialise la structutre avec des zeros
-
-    //const char *hostname = "127.0.0.1";
-    string hostname;
-    cout << "Adresse IP : ";
-    cin >> hostname;
 
     hostinfo = gethostbyname(hostname.c_str());
     if(hostinfo == NULL)
@@ -40,7 +35,7 @@ void Socket::clientSocket(string msg)
     }
 
     const char *buffer = msg.c_str();
-    if(send(sock, buffer, 150l, 0) < 0){
+    if(send(sock, buffer, 150, 0) < 0){
         cout << "Error send" << endl;
         exit(EXIT_FAILURE);
     }
@@ -85,27 +80,29 @@ void Socket::serverSocket()
     socklen_t sinsize = sizeof csin;
 
     /*Stop sur cette fonciton pour l'écoute*/
-    csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
+    while(true){
+        csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
 
-    if(csock == INVALID_SOCKET)
-    {
-        perror("accept()");
-        exit(EXIT_FAILURE);
+        if(csock == INVALID_SOCKET)
+        {
+            perror("accept()");
+            exit(EXIT_FAILURE);
+        }
+
+        //lecture du ms client
+        char buffer[1024];
+        int n = 0;
+
+        if((n = recv(csock, buffer, sizeof buffer - 1, 0)) < 0)
+        {
+            perror("recv()");
+            exit(EXIT_FAILURE);
+        }
+
+        buffer[n] = '\0';
+
+        cout << "message : " << buffer << endl;
     }
-
-    //lecture du ms client
-    char buffer[1024];
-    int n = 0;
-
-    if((n = recv(csock, buffer, sizeof buffer - 1, 0)) < 0)
-    {
-        perror("recv()");
-        exit(EXIT_FAILURE);
-    }
-
-    buffer[n] = '\0';
-
-    cout << "message : " << buffer << endl;
 
     closesocket(sock);
     closesocket(csock);

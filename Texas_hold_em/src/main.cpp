@@ -18,8 +18,19 @@ int main(int argc, char *argv[])
     }
     else if (choice == 2)
     {
-        string msg;
-        getline(cin,msg);
-        Socket::clientSocket(msg);
+        /*Demande du hostname du receveur*/
+        cout << "Hostname :" << endl;
+        string hostname;
+        getline(cin,hostname);
+
+        while(true){
+            /*demande du message*/
+            cout << "message :";
+            string msg;
+            getline(cin,msg);
+            cout <<" " << endl;
+
+            Socket::clientSocket(msg, hostname);
+        }
     }
 }
