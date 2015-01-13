@@ -4,7 +4,10 @@ using namespace std;
 
 void Socket::clientSocket(string msg, string hostname)
 {
-    cout << "CLIENT" << endl;
+    /*******à supprimer !!!**/
+    /****/hostname = "127.0.0.1";
+    /****************************/
+
     //déclaration de la socket
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock == INVALID_SOCKET)

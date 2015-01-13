@@ -23,14 +23,23 @@ int main(int argc, char *argv[])
         string hostname;
         getline(cin,hostname);
 
-        while(true){
+        bool exit = false;
+
+        while(!exit){
             /*demande du message*/
             cout << "message :";
             string msg;
             getline(cin,msg);
-            cout <<" " << endl;
 
-            Socket::clientSocket(msg, hostname);
+            if(!msg.compare("exit"))
+            {
+                Socket::clientSocket("Client à quitté la conversation", hostname);
+                cout << "Arrêt de la conversation" << endl;
+                exit = true;
+            }else
+            {
+                Socket::clientSocket(msg, hostname);
+            }
         }
     }
 }
