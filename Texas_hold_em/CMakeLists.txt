@@ -11,6 +11,8 @@ file(
         source_files
 
         src/*
+        
+        src/future/*
 
 )
 
@@ -21,3 +23,5 @@ add_executable(
 	${source_files}
 	
 )
+
+TARGET_LINK_LIBRARIES(testpoker pthread)

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include "future/future.h"
 #include "Socket.h"
 
 using namespace std;

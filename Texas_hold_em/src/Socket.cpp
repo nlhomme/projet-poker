@@ -5,7 +5,7 @@ using namespace std;
 void Socket::clientSocket(string msg, string hostname)
 {
     /*******à supprimer !!!**/
-    /****/hostname = "127.0.0.1";
+    /****///hostname = "127.0.0.1";
     /****************************/
 
     //déclaration de la socket
