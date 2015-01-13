@@ -1,7 +1,13 @@
-/Texas_hold_em/bin
 /Texas_hold_em/CMakeFiles
 /Texas_hold_em/*.cmake
 /Texas_hold_em/MakeFile
 /Texas_hold_em/CMakeCache.txt
 /Texas_hold_em/*cbp
 /Texas_hold_em/*.layout
+
+/test_socket_local/bin
+/test_socket_local/CMakeFiles
+/test_socket_local/*.cmake
+/test_socket_local/CMakeCache.txt
+/test_socket_local/CMakeLists.txt
+/test_socket_local/MakeFile
