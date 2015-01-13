@@ -10,9 +10,16 @@ int main(int argc, char *argv[])
     cout << "Client ou serveur ? \n 1 - Serveur \n 2 - Client" << endl;
     int choice;
     cin >> choice;
+    cin.ignore();
 
     if(choice == 1)
+    {
         Socket::serverSocket();
+    }
     else if (choice == 2)
-        Socket::clientSocket();
+    {
+        string msg;
+        getline(cin,msg);
+        Socket::clientSocket(msg);
+    }
 }

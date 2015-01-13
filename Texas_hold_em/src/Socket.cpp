@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void Socket::clientSocket()
+void Socket::clientSocket(string msg)
 {
     cout << "CLIENT" << endl;
     //déclaration de la socket
@@ -39,8 +39,8 @@ void Socket::clientSocket()
         exit(EXIT_FAILURE);
     }
 
-    const char *buffer = "Bonjour !";
-    if(send(sock, buffer, 9, 0) < 0){
+    const char *buffer = msg.c_str();
+    if(send(sock, buffer, 150l, 0) < 0){
         cout << "Error send" << endl;
         exit(EXIT_FAILURE);
     }
@@ -79,12 +79,12 @@ void Socket::serverSocket()
         exit(EXIT_FAILURE);
     }
 
-
     SOCKADDR_IN csin = { 0 };
     SOCKET csock;
 
     socklen_t sinsize = sizeof csin;
 
+    /*Stop sur cette fonciton pour l'écoute*/
     csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
 
     if(csock == INVALID_SOCKET)

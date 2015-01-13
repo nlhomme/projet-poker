@@ -24,7 +24,7 @@ typedef struct in_addr IN_ADDR;
 class Socket
 {
     public:
-        static void clientSocket();
+        static void clientSocket(std::string msg);
         static void serverSocket();
 };
 
