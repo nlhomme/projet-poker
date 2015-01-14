@@ -1,4 +1,5 @@
 #include "Socket.h"
+#include "Services.h"
 
 using namespace std;
 
@@ -104,7 +105,9 @@ void Socket::serverSocket()
 
         buffer[n] = '\0';
 
-        cout << "message : " << buffer << endl;
+        //remonte le message sur la couche services
+        Services::receivedMessage(buffer);
+        //cout << "message : " << buffer << endl;
     }
 
     closesocket(sock);

@@ -5,6 +5,9 @@ using namespace std;
 
 /*Class contenant tout les services utilisant les we socket*/
 
+/*initialisation de la variable statique*/
+string Services::message = "";
+
 /*Lance un listener*/
 void* Services::startServer(void* arg)
 {
@@ -39,26 +42,42 @@ void* Services::sendMessenger(void* arg)
     }
 }
 
-pthread_t* Services::thread_server()
+pthread_t Services::thread_server()
 {
     /*créer les thread serveur*/
-    pthread_t* server_thread;
+    pthread_t server_thread;
 
     /*lance les threads*/
-    pthread_create(server_thread, NULL, &Services::startServer, NULL);
+    pthread_create(&server_thread, NULL, &Services::startServer, NULL);
 
     return server_thread;
 }
 
-pthread_t* Services::thread_messenger()
+pthread_t Services::thread_messenger()
 {
         /*créer les thread serveur*/
-    pthread_t* messenger_thread;
+    pthread_t messenger_thread;
 
     /*lance les threads*/
-    pthread_create(messenger_thread, NULL, &Services::sendMessenger, NULL);
+    pthread_create(&messenger_thread, NULL, &Services::sendMessenger, NULL);
 
     return messenger_thread;
 }
 
+void Services::receivedMessage(string msg)
+{
+    Services::message = msg;
+}
 
+string Services::getMessage()
+{
+    if(!Services::message.empty())
+    {
+        string returnMsg = Services::message;
+        Services::message = "";
+        return returnMsg;
+    }else
+    {
+        return "";
+    }
+}

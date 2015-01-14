@@ -18,8 +18,11 @@ int main(int argc, char *argv[])
     }
     else if (choice == 2)
     {
-        string msg;
-        getline(cin,msg);
-        Socket::clientSocket(msg);
+	while(true)
+	{
+		string msg;
+	        getline(cin,msg);
+        	Socket::clientSocket(msg);
+	}
     }
 }
