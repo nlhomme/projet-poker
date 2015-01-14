@@ -7,6 +7,7 @@ using namespace std;
 
 /*initialisation de la variable statique*/
 string Services::message = "";
+string Services::hostname = "";
 
 /*Lance un listener*/
 void* Services::startServer(void* arg)
@@ -17,11 +18,6 @@ void* Services::startServer(void* arg)
 /*lance une messagerie instannée*/
 void* Services::sendMessenger(void* arg)
 {
-    /*Demande du hostname du receveur*/
-    cout << "Hostname :" << endl;
-    string hostname;
-    getline(cin,hostname);
-
     bool exit = false;
 
     while(!exit){
@@ -32,12 +28,12 @@ void* Services::sendMessenger(void* arg)
 
         if(!msg.compare("exit"))
         {
-            Socket::clientSocket("Client à quitté la conversation", hostname);
+            Socket::clientSocket("Client à quitté la conversation", Services::hostname);
             cout << "Arrêt de la conversation" << endl;
             exit = true;
         }else
         {
-            Socket::clientSocket(msg, hostname);
+            Socket::clientSocket(msg, Services::hostname);
         }
     }
 }
@@ -79,5 +75,18 @@ string Services::getMessage()
     }else
     {
         return "";
+    }
+}
+
+void Services::setHostname(string hostname)
+{
+    Services::hostname = hostname;
+}
+
+void Services::sendAMessage(string msg)
+{
+    if(!msg.empty())
+    {
+        Socket::clientSocket(msg, Services::hostname);
     }
 }
