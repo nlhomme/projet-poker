@@ -1,3 +1,6 @@
+/*******
+    Florent Baudon
+*******/
 #include "Services.h"
 #include "Socket.h"
 

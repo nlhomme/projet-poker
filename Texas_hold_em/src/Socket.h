@@ -1,3 +1,7 @@
+/*******
+    Florent Baudon
+*******/
+
 #ifndef SOCKET_H
 #define SOCKET_H
 

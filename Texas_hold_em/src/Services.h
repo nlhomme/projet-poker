@@ -1,3 +1,7 @@
+/*******
+    Florent Baudon
+*******/
+
 #ifndef SERVICES_H
 #define SERVICES_H
 
