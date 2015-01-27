@@ -136,7 +136,7 @@ static int reception()
         bzero(&m_socketAddr, sizeof(m_socketAddr));
         m_socketAddr.sin_family = AF_INET;
         m_socketAddr.sin_port = port;
-        if(inet_aton("127.0.0.1", &(m_socketAddr.sin_addr))<0)
+        if(inet_aton("192.168.18.15", &(m_socketAddr.sin_addr))<0)
         {
                 perror("cannot get the locale IP address for 192.168.18.15 \n");
                 exit(1);
@@ -230,7 +230,7 @@ static int emission()
         bzero(&m_socketAddr, sizeof(m_socketAddr));
         m_socketAddr.sin_family = AF_INET;
         m_socketAddr.sin_port = port;
-        if(inet_aton("127.0.0.1", &(m_socketAddr.sin_addr))<0)
+        if(inet_aton("192.168.18.2", &(m_socketAddr.sin_addr))<0)
         {
                 perror("cannot get the locale IP address for 192.168.18.2 \n");
                 exit(1);
