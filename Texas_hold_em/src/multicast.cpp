@@ -186,7 +186,7 @@ static int reception()
                         exit(1);
                 }
                // printf("%s:%d [%d]\t: %s\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port), len, recv_buffer);
-               cout << recv_buffer << endl;
+               std::cout << recv_buffer << std::endl;
         }
 
 
