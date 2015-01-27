@@ -24,7 +24,94 @@ just one host and as a receiver on all the other hosts
 #define GROUP "239.137.194.111"
 #define PORT 55555
 
-int reception()
+static void serverMulti()
+{
+    int sock;
+    struct in_addr ip;
+    static struct sockaddr_in ad_multicast, adresse;
+    //décrit le groupe multicast
+    ip_mreq gr_multicast;
+
+    //creation du socket UDP
+    sock = socket(AF_INET, SOCK_DGRAM, 0);
+
+    //récupération de l'adresse IP du groupe
+    inet_aton("226.1.2.3", &ip);
+
+    //cré   ation de l'indentificateur du groupe
+    gr_multicast.imr_multiaddr.s_addr = ip.s_addr;
+    gr_multicast.imr_interface.s_addr = htons(INADDR_ANY);
+
+    //abonnement des la socket au groupe multicast
+    setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, &gr_multicast, sizeof(struct ip_mreq));
+
+    //autorise la réutilisation du socket pour lier plusieurs socket sur le port
+    int reuse = 1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (int*)&reuse, sizeof(reuse));
+
+    //liaison socket au port du groupe multicast
+    bzero((char*) &adresse, sizeof(adresse));
+    ad_multicast.sin_family = AF_INET;
+    ad_multicast.sin_addr.s_addr = htons(INADDR_ANY);
+    ad_multicast.sin_port = htons(6234); //port à changer
+    bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
+
+    //emission du paquet
+    static struct sockaddr_in adresseEmit ;
+    int longueur_adresse = sizeof(struct sockaddr_in);
+    bzero((char*) &adresse, sizeof(adresse));
+    adresseEmit.sin_family = AF_INET;
+    adresseEmit.sin_addr.s_addr = ip.s_addr;
+    adresseEmit.sin_port = htons(6234);
+
+    const char* message = "Bonjour !";
+
+    sendto(sock, message, sizeof(message), 0, (struct sockaddr*)&adresseEmit, longueur_adresse);
+
+}
+
+
+static void clientmulti()
+{
+    int sock;
+    struct in_addr ip;
+    static struct sockaddr_in ad_multicast, adresse;
+    //décrit le groupe multicast
+    ip_mreq gr_multicast;
+
+    //creation du socket UDP
+    sock = socket(AF_INET, SOCK_DGRAM, 0);
+
+    //récupération de l'adresse IP du groupe
+    inet_aton("226.1.2.3", &ip);
+
+    //cré   ation de l'indentificateur du groupe
+    gr_multicast.imr_multiaddr.s_addr = ip.s_addr;
+    gr_multicast.imr_interface.s_addr = htons(INADDR_ANY);
+
+    //abonnement des la socket au groupe multicast
+    setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, &gr_multicast, sizeof(struct ip_mreq));
+
+    //autorise la réutilisation du socket pour lier plusieurs socket sur le port
+    int reuse = 1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (int*)&reuse, sizeof(reuse));
+
+    //liaison socket au port du groupe multicast
+    bzero((char*) &adresse, sizeof(adresse));
+    ad_multicast.sin_family = AF_INET;
+    ad_multicast.sin_addr.s_addr = htons(INADDR_ANY);
+    ad_multicast.sin_port = htons(6234); //port à changer
+    bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
+
+    char buffer[1024];
+    while(true)
+    {
+        recv(sock, buffer, 1000, 0);
+        std::cout << buffer << std::endl;
+    }
+}
+
+static int reception()
 {
         struct ip_mreq imr;
         int sock_channel;
@@ -49,7 +136,7 @@ int reception()
         bzero(&m_socketAddr, sizeof(m_socketAddr));
         m_socketAddr.sin_family = AF_INET;
         m_socketAddr.sin_port = port;
-        if(inet_aton("192.168.18.15", &(m_socketAddr.sin_addr))<0)
+        if(inet_aton("127.0.0.1", &(m_socketAddr.sin_addr))<0)
         {
                 perror("cannot get the locale IP address for 192.168.18.15 \n");
                 exit(1);
@@ -65,7 +152,7 @@ int reception()
         if (bind(sock_channel, (struct sockaddr *)&m_socketAddr,
                 sizeof(m_socketAddr)) < 0)
         {
-                perror("problem with function bind errno \n");
+                perror("problem blablzawith function bind errno \n");
                 exit(1);
         }
 
@@ -105,7 +192,7 @@ int reception()
 
 
 
-int emission()
+static int emission()
 {
         unsigned char ttl = 1;
         int sock_channel;
@@ -117,9 +204,9 @@ int emission()
         socklen_t remote_addr_len = sizeof(struct sockaddr_in);
         unsigned char send_buffer[9000];
         multicastIPaddr = GROUP;
-        char *requete;
+        std::string requete;
 
-        requete = "bonjour!";
+        requete = "bonjour";
 
         // open the socket
         sock_channel = socket(PF_INET, SOCK_DGRAM, 0);
@@ -143,7 +230,7 @@ int emission()
         bzero(&m_socketAddr, sizeof(m_socketAddr));
         m_socketAddr.sin_family = AF_INET;
         m_socketAddr.sin_port = port;
-        if(inet_aton("192.168.18.2", &(m_socketAddr.sin_addr))<0)
+        if(inet_aton("127.0.0.1", &(m_socketAddr.sin_addr))<0)
         {
                 perror("cannot get the locale IP address for 192.168.18.2 \n");
                 exit(1);
@@ -164,8 +251,8 @@ int emission()
                 exit(1);
         }
 
-        len = strlen(requete) + 1;
-        memcpy(send_buffer, requete, len);
+        len = strlen(requete.c_str()) + 1;
+        memcpy(send_buffer, requete.c_str(), len);
 
         if(sendto(sock_channel, send_buffer, len, 0,
           (struct sockaddr *) &remote_addr, sizeof(remote_addr))< len)
