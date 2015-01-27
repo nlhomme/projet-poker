@@ -113,6 +113,8 @@ static void clientmulti()
 
 static int reception()
 {
+        string addresse_ip = "127.0.0.1";
+
         struct ip_mreq imr;
         int sock_channel;
         struct sockaddr_in m_socketAddr;
@@ -136,7 +138,7 @@ static int reception()
         bzero(&m_socketAddr, sizeof(m_socketAddr));
         m_socketAddr.sin_family = AF_INET;
         m_socketAddr.sin_port = port;
-        if(inet_aton("192.168.18.15", &(m_socketAddr.sin_addr))<0)
+        if(inet_aton(addresse_ip, &(m_socketAddr.sin_addr))<0)
         {
                 perror("cannot get the locale IP address for 192.168.18.15 \n");
                 exit(1);
@@ -163,7 +165,7 @@ static int reception()
                 perror("cannot get the multicast IP address for 239.137.194.111\n");
                 exit(1);
         }
-        if(inet_aton("192.168.18.15", (struct in_addr*)&(imr.imr_interface.s_addr))<0)
+        if(inet_aton(addresse_ip, (struct in_addr*)&(imr.imr_interface.s_addr))<0)
         {
                 perror("cannot get the local IP address for multicast interface 192.168.18.15 \n");
                 exit(1);
@@ -194,6 +196,8 @@ static int reception()
 
 static int emission()
 {
+        string addresse_ip = "127.0.0.1";
+
         unsigned char ttl = 1;
         int sock_channel;
         struct sockaddr_in m_socketAddr;
@@ -230,7 +234,7 @@ static int emission()
         bzero(&m_socketAddr, sizeof(m_socketAddr));
         m_socketAddr.sin_family = AF_INET;
         m_socketAddr.sin_port = port;
-        if(inet_aton("192.168.18.2", &(m_socketAddr.sin_addr))<0)
+        if(inet_aton(addresse_ip, &(m_socketAddr.sin_addr))<0)
         {
                 perror("cannot get the locale IP address for 192.168.18.2 \n");
                 exit(1);

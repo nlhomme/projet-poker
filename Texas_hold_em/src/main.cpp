@@ -19,10 +19,10 @@ int main(int argc, char *argv[])
     getline(cin, hostname);
     if(hostname == "1")
     {
-            serverMulti();
+            emission();
     }else
     {
-            clientmulti();
+            reception();
     }
     /*string hostname;
     cout << "Hostname : ";
