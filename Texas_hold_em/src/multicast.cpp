@@ -185,7 +185,8 @@ static int reception()
                         perror("%s reception of udp datagramm failed\n");
                         exit(1);
                 }
-                printf("%s:%d [%d]\t: %s\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port), len, recv_buffer);
+               // printf("%s:%d [%d]\t: %s\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port), len, recv_buffer);
+               cout << recv_buffer << endl;
         }
 
 

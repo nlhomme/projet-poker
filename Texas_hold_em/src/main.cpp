@@ -15,7 +15,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     string hostname;
-        cout << "serveur 1 ---- client 2 ";
+        cout << "test serveur 1 ---- client 2 ";
     getline(cin, hostname);
     if(hostname == "1")
     {
