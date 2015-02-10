@@ -1,3 +1,7 @@
+/*******
+    Florent Baudon
+*******/
+
 #ifndef MULTICAST_H
 #define MULTICAST_H
 
@@ -9,6 +13,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h> /* close */
+#include <ifaddrs.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -17,7 +22,6 @@
 
 #define GROUP "226.1.1.1"
 #define PORT 4321
-#define LOCALINT  "172.16.112.165"
 
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
@@ -31,6 +35,8 @@ class Multicast
         static void serverMulti();
         /*Client multi cast qui recoit les message (contenant les adresses) du groupe*/
         static void clientMulti();
+    private :
+        static std::string getLocalAddress();
 };
 
 #endif // MULTICAST_H
