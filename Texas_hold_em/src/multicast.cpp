@@ -27,7 +27,7 @@ just one host and as a receiver on all the other hosts
 
 #define GROUP "226.1.1.1"
 #define PORT 4321
-#define LOCALINT  "127.0.0.1"
+#define LOCALINT  "172.16.112.165"
 
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
