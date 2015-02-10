@@ -28,7 +28,6 @@ just one host and as a receiver on all the other hosts
 #define GROUP "239.137.194.111"
 #define PORT 55555
 
-typedef int SOCKET;
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
@@ -83,8 +82,8 @@ static void serverMulti()
 static void clientmulti()
 {
     int sock;
-    struct in_addr ip;
-    static struct sockaddr_in ad_multicast, adresse;
+    IN_ADDR ip;
+    static SOCKADDR_IN ad_multicast, adresse;
     //décrit le groupe multicast
     ip_mreq gr_multicast;
 
@@ -114,27 +113,16 @@ static void clientmulti()
 
     //char buffer[1024];
 
-    SOCKADDR_IN csin = { 0 };
-    SOCKET csock;
-
-    socklen_t sinsize = sizeof csin;
 
         /*Stop sur cette fonction pour l'écoute*/
     while(true)
     {
-        csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
-
-        if(csock == INVALID_SOCKET)
-        {
-            perror("accept()");
-            exit(EXIT_FAILURE);
-        }
 
         //lecture du ms client
         char buffer[1024];
         int n = 0;
 
-        if((n = recv(csock, buffer, sizeof buffer - 1, 0)) < 0)
+        if((n = recv(sock, buffer, sizeof buffer - 1, 0)) < 0)
         {
             perror("recv()");
             exit(EXIT_FAILURE);
@@ -142,7 +130,7 @@ static void clientmulti()
 
         buffer[n] = '\0';
 
-        //cout << "message : " << buffer << endl;
+        std::cout << "message : " << buffer << std::endl;
     }
 
     /*while(true)
