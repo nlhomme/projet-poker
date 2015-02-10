@@ -20,11 +20,9 @@ int main(int argc, char *argv[])
     if(hostname == "1")
     {
             serverMulti();
-            //emission();
     }else
     {
             clientmulti();
-            //reception();
     }
     /*string hostname;
     cout << "Hostname : ";

@@ -9,7 +9,6 @@ arguments, it receives and prints these packets. Start it as a sender on
 just one host and as a receiver on all the other hosts
 
 */
-
 #include <stdlib.h>
 #include <iostream>
 
@@ -17,12 +16,22 @@ just one host and as a receiver on all the other hosts
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h> /* close */
+#include <netdb.h> /* gethostbyname */
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
 
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
+
 #define GROUP "239.137.194.111"
 #define PORT 55555
+
+typedef int SOCKET;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+typedef struct in_addr IN_ADDR;
 
 static void serverMulti()
 {
@@ -53,7 +62,7 @@ static void serverMulti()
     bzero((char*) &adresse, sizeof(adresse));
     ad_multicast.sin_family = AF_INET;
     ad_multicast.sin_addr.s_addr = htons(INADDR_ANY);
-    ad_multicast.sin_port = htons(PORT); //port à changer
+    ad_multicast.sin_port = htons(PORT);
     bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
 
     //emission du paquet
@@ -103,14 +112,46 @@ static void clientmulti()
     ad_multicast.sin_port = htons(PORT); //port à changer
     bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
 
-    char buffer[1024];
+    //char buffer[1024];
+
+    SOCKADDR_IN csin = { 0 };
+    SOCKET csock;
+
+    socklen_t sinsize = sizeof csin;
+
+        /*Stop sur cette fonction pour l'écoute*/
     while(true)
+    {
+        csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
+
+        if(csock == INVALID_SOCKET)
+        {
+            perror("accept()");
+            exit(EXIT_FAILURE);
+        }
+
+        //lecture du ms client
+        char buffer[1024];
+        int n = 0;
+
+        if((n = recv(csock, buffer, sizeof buffer - 1, 0)) < 0)
+        {
+            perror("recv()");
+            exit(EXIT_FAILURE);
+        }
+
+        buffer[n] = '\0';
+
+        //cout << "message : " << buffer << endl;
+    }
+
+    /*while(true)
     {
         recv(sock, buffer, 1000, 0);
         std::cout << buffer << std::endl;
-    }
+    }*/
 }
-
+/*
 static int reception()
 {
         std::string addresse_ip = "127.0.0.1";
@@ -267,7 +308,7 @@ static int emission()
         }
 
         return 0;
-}
+}*/
 
 /**Bonjour,
 
