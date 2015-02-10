@@ -37,6 +37,7 @@ class Multicast
         static void clientMulti();
     private :
         static std::string getLocalAddress();
+        static std::string m_name;
 };
 
 #endif // MULTICAST_H

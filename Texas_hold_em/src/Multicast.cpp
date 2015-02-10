@@ -4,8 +4,16 @@
 
 #include "Multicast.h"
 
+std::string Multicast::m_name = "Doe";
+
 void Multicast::serverMulti()
 {
+    if(m_name.empty())
+    {
+        std::cout << "Error : Player name is empty" << std::endl;
+        return;
+    }
+
     const std::string localInt = getLocalAddress();
 
     int sock;
@@ -33,8 +41,11 @@ void Multicast::serverMulti()
         exit(1);
     }
 
-    char databuf[1024] = "Multicast test message lol!";
+    char databuf[1024];
     int datalen = sizeof(databuf);
+    std::string name = "/" + Multicast::m_name;
+    std::string message = localInt + name;
+    strncpy(databuf, message.c_str(), datalen);
 
     if(sendto(sock, databuf, datalen, 0, (struct sockaddr*)&groupSock, sizeof(groupSock)) < 0)
     {
