@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <pthread.h>
-#include "multicast.cpp"
+#include "Multicast.h"
 
 #include "Services.h"
 
@@ -19,10 +19,10 @@ int main(int argc, char *argv[])
     getline(cin, hostname);
     if(hostname == "1")
     {
-            serverMulti();
+            Multicast::serverMulti();
     }else
     {
-            clientMulti();
+            Multicast::clientMulti();
     }
     /*string hostname;
     cout << "Hostname : ";

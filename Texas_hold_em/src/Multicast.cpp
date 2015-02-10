@@ -1,39 +1,6 @@
-/*
+#include "Multicast.h"
 
-multicast.c
-
-The following program sends or receives multicast packets. If invoked
-with one argument, it sends a packet containing the current time to an
-arbitrarily chosen multicast group and UDP port. If invoked with no
-arguments, it receives and prints these packets. Start it as a sender on
-just one host and as a receiver on all the other hosts
-
-*/
-#include <stdlib.h>
-#include <iostream>
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h> /* close */
-#include <netdb.h> /* gethostbyname */
-#include <time.h>
-#include <stdio.h>
-#include <string.h>
-
-#define INVALID_SOCKET -1
-#define SOCKET_ERROR -1
-
-#define GROUP "226.1.1.1"
-#define PORT 4321
-#define LOCALINT  "172.16.112.165"
-
-typedef struct sockaddr_in SOCKADDR_IN;
-typedef struct sockaddr SOCKADDR;
-typedef struct in_addr IN_ADDR;
-
-static void serverMulti()
+void Multicast::serverMulti()
 {
     int sock;
     IN_ADDR localInterface;
@@ -74,7 +41,7 @@ static void serverMulti()
 }
 
 
-static void clientMulti()
+void Multicast::clientMulti()
 {
     std::cout << "Waiting message" << std::endl;
     int sock;
