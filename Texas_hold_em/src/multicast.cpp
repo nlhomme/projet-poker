@@ -32,7 +32,7 @@ typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
 
-static void serverMulti()
+static void serverMulti(bool emit)
 {
     int sock;
     struct in_addr ip;
@@ -65,16 +65,41 @@ static void serverMulti()
     bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
 
     //emission du paquet
-    static struct sockaddr_in adresseEmit ;
-    int longueur_adresse = sizeof(struct sockaddr_in);
-    bzero((char*) &adresse, sizeof(adresse));
-    adresseEmit.sin_family = AF_INET;
-    adresseEmit.sin_addr.s_addr = ip.s_addr;
-    adresseEmit.sin_port = htons(PORT);
+    if(emit){
+        SOCKADDR_IN adresseEmit ;
+        int longueur_adresse = sizeof(struct sockaddr_in);
+        bzero((char*) &adresse, sizeof(adresse));
+        adresseEmit.sin_family = AF_INET;
+        adresseEmit.sin_addr.s_addr = ip.s_addr;
+        adresseEmit.sin_port = htons(PORT);
 
-    const char* message = "Bonjour !";
+        const char* message = "Bonjour !";
 
-    sendto(sock, message, sizeof(message), 0, (struct sockaddr*)&adresseEmit, longueur_adresse);
+        if(sendto(sock, message, sizeof(message), 0, (struct sockaddr*)&adresseEmit, longueur_adresse)<0)
+        {
+            std::cout << "Error send" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }else{
+
+        while(true)
+        {
+
+            //lecture du ms client
+            char buffer[1024];
+            int n = 0;
+
+            if((n = recv(sock, buffer, sizeof buffer - 1, 0)) < 0)
+            {
+                perror("recv()");
+                exit(EXIT_FAILURE);
+            }
+
+            buffer[n] = '\0';
+
+            std::cout << "message : " << buffer << std::endl;
+        }
+    }
 
 }
 
