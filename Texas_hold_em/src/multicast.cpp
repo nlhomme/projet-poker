@@ -36,7 +36,7 @@ static void serverMulti()
     sock = socket(AF_INET, SOCK_DGRAM, 0);
 
     //récupération de l'adresse IP du groupe
-    inet_aton("226.1.2.3", &ip);
+    inet_aton(GROUP, &ip);
 
     //cré   ation de l'indentificateur du groupe
     gr_multicast.imr_multiaddr.s_addr = ip.s_addr;
@@ -53,7 +53,7 @@ static void serverMulti()
     bzero((char*) &adresse, sizeof(adresse));
     ad_multicast.sin_family = AF_INET;
     ad_multicast.sin_addr.s_addr = htons(INADDR_ANY);
-    ad_multicast.sin_port = htons(6234); //port à changer
+    ad_multicast.sin_port = htons(PORT); //port à changer
     bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
 
     //emission du paquet
@@ -62,7 +62,7 @@ static void serverMulti()
     bzero((char*) &adresse, sizeof(adresse));
     adresseEmit.sin_family = AF_INET;
     adresseEmit.sin_addr.s_addr = ip.s_addr;
-    adresseEmit.sin_port = htons(6234);
+    adresseEmit.sin_port = htons(PORT);
 
     const char* message = "Bonjour !";
 
@@ -83,7 +83,7 @@ static void clientmulti()
     sock = socket(AF_INET, SOCK_DGRAM, 0);
 
     //récupération de l'adresse IP du groupe
-    inet_aton("226.1.2.3", &ip);
+    inet_aton(GROUP, &ip);
 
     //cré   ation de l'indentificateur du groupe
     gr_multicast.imr_multiaddr.s_addr = ip.s_addr;
@@ -100,7 +100,7 @@ static void clientmulti()
     bzero((char*) &adresse, sizeof(adresse));
     ad_multicast.sin_family = AF_INET;
     ad_multicast.sin_addr.s_addr = htons(INADDR_ANY);
-    ad_multicast.sin_port = htons(6234); //port à changer
+    ad_multicast.sin_port = htons(PORT); //port à changer
     bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
 
     char buffer[1024];
