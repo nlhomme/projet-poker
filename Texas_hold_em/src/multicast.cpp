@@ -25,7 +25,7 @@ just one host and as a receiver on all the other hosts
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 
-#define GROUP "239.137.194.111"
+#define GROUP "225.137.194.111"
 #define PORT 55555
 
 typedef struct sockaddr_in SOCKADDR_IN;
@@ -35,8 +35,8 @@ typedef struct in_addr IN_ADDR;
 static void serverMulti(bool emit)
 {
     int sock;
-    struct in_addr ip;
-    static struct sockaddr_in ad_multicast, adresse;
+    IN_ADDR ip;
+    static SOCKADDR_IN ad_multicast, adresse;
     //décrit le groupe multicast
     ip_mreq gr_multicast;
 
