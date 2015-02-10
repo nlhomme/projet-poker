@@ -25,144 +25,110 @@ just one host and as a receiver on all the other hosts
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 
-#define GROUP "225.137.194.111"
-#define PORT 55555
+#define GROUP "226.1.1.1"
+#define PORT 4321
+#define LOCALINT  "172.16.112.165"
 
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
 
-static void serverMulti(bool emit)
+static void serverMulti()
 {
     int sock;
-    IN_ADDR ip;
-    static SOCKADDR_IN ad_multicast, adresse;
+    IN_ADDR localInterface;
+    static SOCKADDR_IN groupSock;
     //décrit le groupe multicast
     ip_mreq gr_multicast;
 
     //creation du socket UDP
     sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if(sock < 0)
+    {
+        perror("Opening datagram error");
+        exit(1);
+    }
 
-    //récupération de l'adresse IP du groupe
-    inet_aton(GROUP, &ip);
+    groupSock.sin_family = AF_INET;
+    groupSock.sin_addr.s_addr = inet_addr(GROUP);
+    groupSock.sin_port = htons(PORT);
 
-    //cré   ation de l'indentificateur du groupe
-    gr_multicast.imr_multiaddr.s_addr = ip.s_addr;
-    gr_multicast.imr_interface.s_addr = htons(INADDR_ANY);
+    localInterface.s_addr = inet_addr(LOCALINT);
+    if(setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (char *)&localInterface, sizeof(localInterface)) < 0)
+    {
+        perror("Setting local interface error");
+        exit(1);
+    }
 
-    //abonnement des la socket au groupe multicast
-    setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, &gr_multicast, sizeof(struct ip_mreq));
+    char databuf[1024] = "Multicast test message lol!";
+    int datalen = sizeof(databuf);
 
-    //autorise la réutilisation du socket pour lier plusieurs socket sur le port
-    int reuse = 1;
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (int*)&reuse, sizeof(reuse));
-
-    //liaison socket au port du groupe multicast
-    bzero((char*) &adresse, sizeof(adresse));
-    ad_multicast.sin_family = AF_INET;
-    ad_multicast.sin_addr.s_addr = htons(INADDR_ANY);
-    ad_multicast.sin_port = htons(PORT);
-    bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
-
-    //emission du paquet
-    if(emit){
-        SOCKADDR_IN adresseEmit ;
-        int longueur_adresse = sizeof(struct sockaddr_in);
-        bzero((char*) &adresse, sizeof(adresse));
-        adresseEmit.sin_family = AF_INET;
-        adresseEmit.sin_addr.s_addr = ip.s_addr;
-        adresseEmit.sin_port = htons(PORT);
-
-        const char* message = "Bonjour !";
-
-        if(sendto(sock, message, sizeof(message), 0, (struct sockaddr*)&adresseEmit, longueur_adresse)<0)
-        {
-            std::cout << "Error send" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }else{
-
-        while(true)
-        {
-
-            //lecture du ms client
-            char buffer[1024];
-            int n = 0;
-
-            if((n = recv(sock, buffer, sizeof buffer - 1, 0)) < 0)
-            {
-                perror("recv()");
-                exit(EXIT_FAILURE);
-            }
-
-            buffer[n] = '\0';
-
-            std::cout << "message : " << buffer << std::endl;
-        }
+    if(sendto(sock, databuf, datalen, 0, (struct sockaddr*)&groupSock, sizeof(groupSock)) < 0)
+    {
+        perror("Sending datagram message error");
+    }else
+    {
+        std::cout << "message sent" << std::endl;
     }
 
 }
 
 
-static void clientmulti()
+static void clientMulti()
 {
+    std::cout << "Waiting message" << std::endl;
     int sock;
-    IN_ADDR ip;
-    static SOCKADDR_IN ad_multicast, adresse;
-    //décrit le groupe multicast
-    ip_mreq gr_multicast;
+    struct ip_mreq group;
+    static SOCKADDR_IN localSock;
 
-    //creation du socket UDP
+
     sock = socket(AF_INET, SOCK_DGRAM, 0);
-
-    //récupération de l'adresse IP du groupe
-    inet_aton(GROUP, &ip);
-
-    //cré   ation de l'indentificateur du groupe
-    gr_multicast.imr_multiaddr.s_addr = ip.s_addr;
-    gr_multicast.imr_interface.s_addr = htons(INADDR_ANY);
-
-    //abonnement des la socket au groupe multicast
-    setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, &gr_multicast, sizeof(struct ip_mreq));
-
-    //autorise la réutilisation du socket pour lier plusieurs socket sur le port
-    int reuse = 1;
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (int*)&reuse, sizeof(reuse));
-
-    //liaison socket au port du groupe multicast
-    bzero((char*) &adresse, sizeof(adresse));
-    ad_multicast.sin_family = AF_INET;
-    ad_multicast.sin_addr.s_addr = htons(INADDR_ANY);
-    ad_multicast.sin_port = htons(PORT); //port à changer
-    bind(sock, (struct sockaddr *) &adresse, sizeof(struct sockaddr_in));
-
-    //char buffer[1024];
-
-
-        /*Stop sur cette fonction pour l'écoute*/
-    while(true)
+    if(sock < 0)
     {
-
-        //lecture du ms client
-        char buffer[1024];
-        int n = 0;
-
-        if((n = recv(sock, buffer, sizeof buffer - 1, 0)) < 0)
-        {
-            perror("recv()");
-            exit(EXIT_FAILURE);
-        }
-
-        buffer[n] = '\0';
-
-        std::cout << "message : " << buffer << std::endl;
+      perror("Opening datagram socket error");
+      exit(1);
     }
 
-    /*while(true)
+    int reuse = 1;
+    if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *)&reuse, sizeof(reuse)) < 0)
     {
-        recv(sock, buffer, 1000, 0);
-        std::cout << buffer << std::endl;
-    }*/
+        perror("Setting SO_REUSEADDR error");
+        close(sock);
+        exit(1);
+    }
+
+    localSock.sin_family = AF_INET;
+    localSock.sin_port = htons(PORT);
+    localSock.sin_addr.s_addr = INADDR_ANY;
+
+     if(bind(sock, (struct sockaddr*)&localSock, sizeof(localSock)))
+    {
+        perror("Binding datagram socket error");
+        close(sock);
+        exit(1);
+    }
+    group.imr_multiaddr.s_addr = inet_addr(GROUP);
+    group.imr_interface.s_addr = inet_addr(LOCALINT);
+
+    if(setsockopt(sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *)&group, sizeof(group)) < 0)
+    {
+        perror("Adding multicast group error");
+        close(sock);
+        exit(1);
+    }
+
+    char databuf[1024];
+    int datalen = sizeof(databuf);
+
+    if(read(sock, databuf, datalen) < 0)
+    {
+        perror("Reading datagram message error");
+        close(sock);
+        exit(1);
+    }
+
+    std::cout << "message : " << databuf << std::endl;
+
 }
 /*
 static int reception()
