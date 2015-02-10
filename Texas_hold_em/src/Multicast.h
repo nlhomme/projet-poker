@@ -21,7 +21,7 @@
 #define SOCKET_ERROR -1
 
 #define GROUP "226.1.1.1"
-#define PORT 4321
+#define PORTMULTICAST 4321
 
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
@@ -35,8 +35,12 @@ class Multicast
         static void serverMulti();
         /*Client multi cast qui recoit les message (contenant les adresses) du groupe*/
         static void clientMulti();
+        /*Permet d'éditer la variabel m_name*/
+        static void setPlayerName(std::string name);
     private :
+        /*Fonction permettant de récupérer l'adresse ip*/
         static std::string getLocalAddress();
+        /*attribut statique stokant le nom du joueur*/
         static std::string m_name;
 };
 

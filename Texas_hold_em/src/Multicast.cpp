@@ -4,7 +4,7 @@
 
 #include "Multicast.h"
 
-std::string Multicast::m_name = "Doe";
+std::string Multicast::m_name = "";
 
 void Multicast::serverMulti()
 {
@@ -32,7 +32,7 @@ void Multicast::serverMulti()
 
     groupSock.sin_family = AF_INET;
     groupSock.sin_addr.s_addr = inet_addr(GROUP);
-    groupSock.sin_port = htons(PORT);
+    groupSock.sin_port = htons(PORTMULTICAST);
 
     localInterface.s_addr = inet_addr(localInt.c_str());
     if(setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (char *)&localInterface, sizeof(localInterface)) < 0)
@@ -43,10 +43,13 @@ void Multicast::serverMulti()
 
     char databuf[1024];
     int datalen = sizeof(databuf);
+    /*On ajoute un slash avant le nom pour le délimiter*/
     std::string name = "/" + Multicast::m_name;
+    /*on concatène le nom et l'ip pour le faire passer dans un seul message*/
     std::string message = localInt + name;
+    /*on copie le string dans le char array*/
     strncpy(databuf, message.c_str(), datalen);
-
+    /*et on envoie*/
     if(sendto(sock, databuf, datalen, 0, (struct sockaddr*)&groupSock, sizeof(groupSock)) < 0)
     {
         perror("Sending datagram message error");
@@ -83,7 +86,7 @@ void Multicast::clientMulti()
     }
 
     localSock.sin_family = AF_INET;
-    localSock.sin_port = htons(PORT);
+    localSock.sin_port = htons(PORTMULTICAST);
     localSock.sin_addr.s_addr = INADDR_ANY;
 
      if(bind(sock, (struct sockaddr*)&localSock, sizeof(localSock)))
@@ -151,4 +154,9 @@ std::string Multicast::getLocalAddress()
     if (ifAddrStruct!=NULL)
         freeifaddrs(ifAddrStruct);//remember to free ifAddrStruct
     return 0;
+}
+
+void Multicast::setPlayerName(std::string name)
+{
+    Multicast::m_name = name;
 }

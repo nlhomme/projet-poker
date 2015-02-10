@@ -3,23 +3,27 @@
 *******/
 #include "Services.h"
 #include "Socket.h"
+#include "Multicast.h"
 
 using namespace std;
 
-/*Class contenant tout les services utilisant les we socket*/
+
+/************************************************************************************************************************************/
+//SOCKET
+/************************************************************************************************************************************/
 
 /*initialisation de la variable statique*/
-string Services::message = "";
-string Services::hostname = "";
+string ServicesSocket::message = "";
+string ServicesSocket::hostname = "";
 
 /*Lance un listener*/
-void* Services::startServer(void* arg)
+void* ServicesSocket::startServer(void* arg)
 {
     Socket::serverSocket();
 }
 
 /*lance une messagerie instannée*/
-void* Services::sendMessenger(void* arg)
+void* ServicesSocket::sendMessenger(void* arg)
 {
     bool exit = false;
 
@@ -31,49 +35,49 @@ void* Services::sendMessenger(void* arg)
 
         if(!msg.compare("exit"))
         {
-            Socket::clientSocket("Client à quitté la conversation", Services::hostname);
+            Socket::clientSocket("Client à quitté la conversation", ServicesSocket::hostname);
             cout << "Arrêt de la conversation" << endl;
             exit = true;
         }else
         {
-            Socket::clientSocket(msg, Services::hostname);
+            Socket::clientSocket(msg, ServicesSocket::hostname);
         }
     }
 }
 
-pthread_t Services::thread_server()
+pthread_t ServicesSocket::thread_server()
 {
     /*créer les thread serveur*/
     pthread_t server_thread;
 
     /*lance les threads*/
-    pthread_create(&server_thread, NULL, &Services::startServer, NULL);
+    pthread_create(&server_thread, NULL, &ServicesSocket::startServer, NULL);
 
     return server_thread;
 }
 
-pthread_t Services::thread_messenger()
+pthread_t ServicesSocket::thread_messenger()
 {
         /*créer les thread serveur*/
     pthread_t messenger_thread;
 
     /*lance les threads*/
-    pthread_create(&messenger_thread, NULL, &Services::sendMessenger, NULL);
+    pthread_create(&messenger_thread, NULL, &ServicesSocket::sendMessenger, NULL);
 
     return messenger_thread;
 }
 
-void Services::receivedMessage(string msg)
+void ServicesSocket::receivedMessage(string msg)
 {
-    Services::message = msg;
+    ServicesSocket::message = msg;
 }
 
-string Services::getMessage()
+string ServicesSocket::getMessage()
 {
-    if(!Services::message.empty())
+    if(!ServicesSocket::message.empty())
     {
-        string returnMsg = Services::message;
-        Services::message = "";
+        string returnMsg = ServicesSocket::message;
+        ServicesSocket::message = "";
         return returnMsg;
     }else
     {
@@ -81,15 +85,45 @@ string Services::getMessage()
     }
 }
 
-void Services::setHostname(string hostname)
+void ServicesSocket::setHostname(string hostname)
 {
-    Services::hostname = hostname;
+    ServicesSocket::hostname = hostname;
 }
 
-void Services::sendAMessage(string msg)
+void ServicesSocket::sendAMessage(string msg)
 {
     if(!msg.empty())
     {
-        Socket::clientSocket(msg, Services::hostname);
+        Socket::clientSocket(msg, ServicesSocket::hostname);
+    }
+}
+/************************************************************************************************************************************/
+//MULTICAST
+/************************************************************************************************************************************/
+void ServicesMulticast::setPlayerName(std::string name)
+{
+    Multicast::setPlayerName(name);
+}
+
+pthread_t ServicesMulticast::threadListener()
+{
+    /*créer les thread slistner*/
+    pthread_t listener_thread;
+
+    /*lance les threads*/
+    pthread_create(&listener_thread, NULL, &ServicesMulticast::startListener, NULL);
+
+    return listener_thread;
+}
+void ServicesMulticast::sendMulticast()
+{
+    Multicast::serverMulti();
+}
+
+void* ServicesMulticast::startListener(void* arg)
+{
+    while(true)
+    {
+        Multicast::clientMulti();
     }
 }

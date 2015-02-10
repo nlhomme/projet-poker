@@ -110,7 +110,7 @@ void Socket::serverSocket()
         buffer[n] = '\0';
 
         //remonte le message sur la couche services
-        Services::receivedMessage(buffer);
+        ServicesSocket::receivedMessage(buffer);
         //cout << "message : " << buffer << endl;
     }
 

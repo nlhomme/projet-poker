@@ -14,33 +14,47 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string hostname;
-        cout << "test serveur 1 ---- client 2 ";
+    string playerName;
+    cout << "Player name : " << endl;
+    getline(cin, playerName);
+    ServicesMulticast::setPlayerName(playerName);
+
+    ServicesMulticast::threadListener();
+    ServicesMulticast::sendMulticast();
+
+    while(true)
+    {
+
+    }
+
+    /*string hostname;
+    cout << "test serveur 1 ---- client 2 ";
     getline(cin, hostname);
+
     if(hostname == "1")
     {
             Multicast::serverMulti();
     }else
     {
             Multicast::clientMulti();
-    }
+    }*/
     /*string hostname;
     cout << "Hostname : ";
     getline(cin, hostname);
-    Services::setHostname(hostname);
+    ServicesSocket::setHostname(hostname);
 
     Services::thread_server();
     /*Service de chat*/
-    /*Services::thread_messenger();
+    /*ServicesSocket::thread_messenger();
     string msg;
     getline(cin, msg);
     /*Envoie UN message*/
-    //Services::sendAMessage(msg);
+    //ServicesSocket::sendAMessage(msg);
 
     /*pour pour récupérer un message en continu
     fair ça avec un thread ?*/
    /* while(true){
-        string msg = Services::getMessage(); /*récupére un message*/
+        string msg = ServicesSocket::getMessage(); /*récupére un message*/
         /*if(!msg.empty())
         {
             cout << msg << endl;
