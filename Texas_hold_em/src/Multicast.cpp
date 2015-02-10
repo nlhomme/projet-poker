@@ -60,6 +60,55 @@ void Multicast::serverMulti()
 
 }
 
+void Multicast::messenger(std::string message)
+{
+    if(m_name.empty())
+    {
+        std::cout << "Error : Player name is empty" << std::endl;
+        return;
+    }
+
+    const std::string localInt = getLocalAddress();
+
+    int sock;
+    IN_ADDR localInterface;
+    static SOCKADDR_IN groupSock;
+    //décrit le groupe multicast
+    ip_mreq gr_multicast;
+
+    //creation du socket UDP
+    sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if(sock < 0)
+    {
+        perror("Opening datagram error");
+        exit(1);
+    }
+
+    groupSock.sin_family = AF_INET;
+    groupSock.sin_addr.s_addr = inet_addr(GROUP);
+    groupSock.sin_port = htons(PORTMULTICAST);
+
+    localInterface.s_addr = inet_addr(localInt.c_str());
+    if(setsockopt(sock, IPPROTO_IP, IP_MULTICAST_IF, (char *)&localInterface, sizeof(localInterface)) < 0)
+    {
+        perror("Setting local interface error");
+        exit(1);
+    }
+
+    char databuf[1024];
+    int datalen = sizeof(databuf);
+    /*on copie le string dans le char array*/
+    strncpy(databuf, message.c_str(), datalen);
+    /*et on envoie*/
+    if(sendto(sock, databuf, datalen, 0, (struct sockaddr*)&groupSock, sizeof(groupSock)) < 0)
+    {
+        perror("Sending datagram message error");
+    }else
+    {
+        std::cout << "message sent" << std::endl;
+    }
+
+}
 
 void Multicast::clientMulti()
 {
@@ -118,6 +167,7 @@ void Multicast::clientMulti()
     std::cout << "message : " << databuf << std::endl;
 
 }
+
 
 std::string Multicast::getLocalAddress()
 {

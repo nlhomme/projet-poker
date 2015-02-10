@@ -24,6 +24,9 @@ int main(int argc, char *argv[])
 
     getline(cin, playerName);
 
+    string message;
+    ServicesMulticast::multicastMessenger(message);
+
     pthread_cancel(thread);
 
     /*string hostname;

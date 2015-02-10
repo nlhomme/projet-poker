@@ -127,3 +127,12 @@ void* ServicesMulticast::startListener(void* arg)
         Multicast::clientMulti();
     }
 }
+
+void ServicesMulticast::multicastMessenger(string message)
+{
+    while(true)
+    {
+        getline(cin, message);
+        Multicast::messenger(message);
+    }
+}

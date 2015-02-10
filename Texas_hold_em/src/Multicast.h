@@ -35,6 +35,8 @@ class Multicast
         static void serverMulti();
         /*Client multi cast qui recoit les message (contenant les adresses) du groupe*/
         static void clientMulti();
+        /*fonction messenger*/
+        static void messenger(std::string message);
         /*Permet d'éditer la variabel m_name*/
         static void setPlayerName(std::string name);
     private :

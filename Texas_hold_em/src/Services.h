@@ -34,6 +34,7 @@ class ServicesMulticast
         static void setPlayerName(std::string name);
         static pthread_t threadListener();
         static void sendMulticast();
+        static void multicastMessenger(std::string message);
         //static vector<std::string> playerList;
     private :
         static void* startListener(void* arg);
