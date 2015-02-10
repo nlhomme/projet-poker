@@ -19,13 +19,12 @@ int main(int argc, char *argv[])
     getline(cin, playerName);
     ServicesMulticast::setPlayerName(playerName);
 
-    ServicesMulticast::threadListener();
+    pthread_t thread = ServicesMulticast::threadListener();
     ServicesMulticast::sendMulticast();
 
-    while(true)
-    {
+    getline(cin, playerName);
 
-    }
+    pthread_cancel(thread);
 
     /*string hostname;
     cout << "test serveur 1 ---- client 2 ";
