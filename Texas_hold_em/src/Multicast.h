@@ -34,7 +34,7 @@ class Multicast
         /*Serveur multicast qui emet à tout les membres du groupe*/
         static void serverMulti();
         /*Client multi cast qui recoit les message (contenant les adresses) du groupe*/
-        static void clientMulti();
+        static std::string clientMulti();
         /*fonction messenger*/
         static void messenger(std::string message);
         /*Permet d'éditer la variabel m_name*/

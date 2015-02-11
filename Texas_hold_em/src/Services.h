@@ -35,9 +35,14 @@ class ServicesMulticast
         static pthread_t threadListener();
         static void sendMulticast();
         static void multicastMessenger(std::string message);
+        static std::string getMessage();
         //static vector<std::string> playerList;
+
+        static pthread_mutex_t message_mutex;
+
     private :
         static void* startListener(void* arg);
+        static std::string message;
 };
 
 #endif // SERVICES_H

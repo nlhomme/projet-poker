@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(pokertest)
-
+SET(CMAKE_CXX_FLAGS "-std=c++0x")
 set(EXECUTABLE_OUTPUT_PATH bin/)
 
 file(

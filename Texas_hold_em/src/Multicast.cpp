@@ -53,9 +53,6 @@ void Multicast::serverMulti()
     if(sendto(sock, databuf, datalen, 0, (struct sockaddr*)&groupSock, sizeof(groupSock)) < 0)
     {
         perror("Sending datagram message error");
-    }else
-    {
-        std::cout << "message sent" << std::endl;
     }
 
 }
@@ -97,20 +94,19 @@ void Multicast::messenger(std::string message)
 
     char databuf[1024];
     int datalen = sizeof(databuf);
+
+    message = Multicast::m_name + " : " + message;
+
     /*on copie le string dans le char array*/
     strncpy(databuf, message.c_str(), datalen);
     /*et on envoie*/
     if(sendto(sock, databuf, datalen, 0, (struct sockaddr*)&groupSock, sizeof(groupSock)) < 0)
     {
         perror("Sending datagram message error");
-    }else
-    {
-        std::cout << "message sent" << std::endl;
     }
-
 }
 
-void Multicast::clientMulti()
+std::string Multicast::clientMulti()
 {
     const std::string localInt = getLocalAddress();
 
@@ -164,7 +160,10 @@ void Multicast::clientMulti()
         exit(1);
     }
 
-    std::cout << "message : " << databuf << std::endl;
+    //std::cout << databuf << std::endl;
+    std::string message = (std::string)databuf;
+
+    return message;
 
 }
 

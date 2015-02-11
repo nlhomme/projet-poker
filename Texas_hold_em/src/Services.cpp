@@ -100,6 +100,10 @@ void ServicesSocket::sendAMessage(string msg)
 /************************************************************************************************************************************/
 //MULTICAST
 /************************************************************************************************************************************/
+
+string ServicesMulticast::message ="";
+pthread_mutex_t ServicesMulticast::message_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 void ServicesMulticast::setPlayerName(std::string name)
 {
     Multicast::setPlayerName(name);
@@ -124,15 +128,32 @@ void* ServicesMulticast::startListener(void* arg)
 {
     while(true)
     {
-        Multicast::clientMulti();
+        string message = Multicast::clientMulti();
+
+        if(!message.empty())
+        {
+            //cout << message << endl;
+            //Verouillage des message par un mutex pour par editer la variable en même temps que le getMessage
+            pthread_mutex_lock(&ServicesMulticast::message_mutex);
+                ServicesMulticast::message = message;
+            pthread_mutex_unlock(&ServicesMulticast::message_mutex);            // dévérouillage du mutex
+
+        }
     }
 }
 
 void ServicesMulticast::multicastMessenger(string message)
 {
-    while(true)
-    {
-        getline(cin, message);
-        Multicast::messenger(message);
-    }
+    Multicast::messenger(message);
+}
+
+string ServicesMulticast::getMessage()
+{
+    //Verouillage des message par un mutex pour par editer la variable en même temps que le listener
+    pthread_mutex_lock(&ServicesMulticast::message_mutex);
+        string message = ServicesMulticast::message;
+        ServicesMulticast::message = "";
+    pthread_mutex_unlock(&ServicesMulticast::message_mutex);    // dévérouillage du mutex
+
+    return message;
 }
