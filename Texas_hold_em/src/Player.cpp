@@ -1,11 +1,20 @@
 #include "Player.h"
 
-Player::Player()
+using namespace std;
+
+Player::Player(string name, string ipAddress)
 {
-    //ctor
+    this->m_name = name;
+    this->m_ipAddress = ipAddress;
 }
 
-Player::~Player()
+void Player::setMaster(bool master)
 {
-    //dtor
+    this->m_master = master;
 }
+
+bool Player::isMaster()
+{
+    return this->m_master;
+}
+
