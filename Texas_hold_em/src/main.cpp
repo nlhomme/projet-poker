@@ -9,12 +9,13 @@
 #include "Multicast.h"
 
 #include "Services.h"
+#include "Socket.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    Socket::serverSocket();
+
     /*string playerName;
     cout << "Player name : " << endl;
     getline(cin, playerName);
