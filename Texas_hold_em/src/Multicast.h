@@ -39,6 +39,7 @@ class Multicast
         static void messenger(std::string message);
         /*Permet d'éditer la variabel m_name*/
         static void setPlayerName(std::string name);
+        static std::string getPlayerName();
     private :
         /*Fonction permettant de récupérer l'adresse ip*/
         static std::string getLocalAddress();

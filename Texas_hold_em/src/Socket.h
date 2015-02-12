@@ -31,7 +31,7 @@ class Socket
 {
     public:
         static void clientSocket(std::string msg, std::string hostname);
-        static void serverSocket();
+        static int serverSocket();
 };
 
 #endif // SOCKET_H

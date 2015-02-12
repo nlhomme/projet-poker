@@ -209,3 +209,8 @@ void Multicast::setPlayerName(std::string name)
 {
     Multicast::m_name = name;
 }
+
+std::string Multicast::getPlayerName()
+{
+    return Multicast::m_name;
+}

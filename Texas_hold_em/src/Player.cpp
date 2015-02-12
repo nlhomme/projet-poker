@@ -18,3 +18,12 @@ bool Player::isMaster()
     return this->m_master;
 }
 
+string Player::getAddress()
+{
+    return this->m_ipAddress;
+}
+
+string Player::getName()
+{
+    return this->m_name;
+}

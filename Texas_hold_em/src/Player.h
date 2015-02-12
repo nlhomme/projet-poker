@@ -9,6 +9,8 @@ class Player
         Player(std::string name, std::string ipAddress);
         void setMaster(bool master);
         bool isMaster();
+        std::string getName();
+        std::string getAddress();
     private :
         std::string m_name;
         std::string m_ipAddress;

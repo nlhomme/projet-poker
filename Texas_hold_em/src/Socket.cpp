@@ -50,7 +50,7 @@ void Socket::clientSocket(string msg, string hostname)
 }
 
 
-void Socket::serverSocket()
+int Socket::serverSocket()
 {
     //déclaration de la socket
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -104,7 +104,8 @@ void Socket::serverSocket()
         if((n = recv(csock, buffer, sizeof buffer - 1, 0)) < 0)
         {
             perror("recv()");
-            exit(EXIT_FAILURE);
+            //exit(EXIT_FAILURE);
+            return 0;
         }
 
         buffer[n] = '\0';
@@ -116,4 +117,6 @@ void Socket::serverSocket()
 
     closesocket(sock);
     closesocket(csock);
+
+    return 1;
 }
