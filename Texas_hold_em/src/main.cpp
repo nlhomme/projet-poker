@@ -14,7 +14,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string playerName;
+    Socket::serverSocket();
+    /*string playerName;
     cout << "Player name : " << endl;
     getline(cin, playerName);
     ServicesMulticast::setPlayerName(playerName);
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
 
     }
 
-    pthread_cancel(thread_list);
+    pthread_cancel(thread_list);*/
 
     /*string hostname;
     cout << "test serveur 1 ---- client 2 ";
