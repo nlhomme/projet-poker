@@ -26,11 +26,11 @@ DiscoverProtocol::~DiscoverProtocol()
 void DiscoverProtocol::startDiscover()
 {
     ServicesMulticast::sendMulticast();
-    /*threadListener = */ServicesMulticast::threadListener();
-    /*threadServerSocket = */ServicesSocket::thread_server();
+    threadListener = ServicesMulticast::threadListener();
+    threadServerSocket = ServicesSocket::thread_server();
 
     pthread_t thread;
-    pthread_create(&thread,NULL, &DiscoverProtocol::checkPlayer, NULL);
+    //pthread_create(&thread,NULL, &DiscoverProtocol::checkPlayer, NULL);
 
 
     while(true)
