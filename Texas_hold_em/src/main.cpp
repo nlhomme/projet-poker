@@ -6,16 +6,25 @@
 #include <stdlib.h>
 #include <iostream>
 #include <pthread.h>
-#include "Multicast.h"
 
+#include "Multicast.h"
 #include "Services.h"
 #include "Socket.h"
+#include "DiscoverProtocol.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+    string playerName;
+    getline(cin, playerName);
+    Multicast::setPlayerName(playerName);
 
+    DiscoverProtocol* dp = new DiscoverProtocol();
+    dp->startDiscover();
+    dp->stopDiscover();
+
+    //test multicast
     /*string playerName;
     cout << "Player name : " << endl;
     getline(cin, playerName);
@@ -47,6 +56,7 @@ int main(int argc, char *argv[])
 
     pthread_cancel(thread_list);*/
 
+    //test message plus chat
     /*string hostname;
     cout << "test serveur 1 ---- client 2 ";
     getline(cin, hostname);

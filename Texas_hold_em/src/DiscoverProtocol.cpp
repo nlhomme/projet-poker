@@ -29,7 +29,6 @@ void DiscoverProtocol::startDiscover()
     /*threadListener = */ServicesMulticast::threadListener();
     /*threadServerSocket = */ServicesSocket::thread_server();
 
-    cout << "test" << endl;
     pthread_t thread;
     pthread_create(&thread,NULL, &DiscoverProtocol::checkPlayer, NULL);
 
@@ -37,6 +36,7 @@ void DiscoverProtocol::startDiscover()
     while(true)
     {
         string loginAndAddress = ServicesMulticast::getMessage(); /*recoit le non du joueur et son adresse ip sous le format "192.168.6.6/ipName"*/
+
         if(!loginAndAddress.empty())
         {
             int indexOfSlash = (int)loginAndAddress.find('/');
