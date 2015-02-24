@@ -19,6 +19,7 @@ string ServicesSocket::hostname = "";
 /*Lance un listener*/
 void* ServicesSocket::startServer(void* arg)
 {
+    cout << "Socket server start" << endl;
     Socket::serverSocket();
 }
 

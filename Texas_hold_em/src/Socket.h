@@ -25,7 +25,7 @@ typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
 
-/*Contient  les fonctions permettant d'étabier une connection entre 2 périphérique*/
+/*Contient  les fonctions permettant d'établir une connection entre 2 périphérique*/
 
 class Socket
 {

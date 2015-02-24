@@ -64,7 +64,7 @@ void DiscoverProtocol::startDiscover()
                 pthread_mutex_unlock(&mutex_playerList);
 
                 ServicesMulticast::sendMulticast();
-
+                pthread_cancel(threadListener);
                 for(int i=0; i<DiscoverProtocol::playerList.size(); i++)
                 {
                     Player* p = DiscoverProtocol::playerList[i];
