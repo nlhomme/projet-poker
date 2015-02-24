@@ -21,16 +21,18 @@ DiscoverProtocol::~DiscoverProtocol()
     cout << "Destroy" << endl;
     pthread_cancel(threadListener);
     pthread_cancel(threadServerSocket);
+    pthread_cancel(threadPing);
 }
 
 void DiscoverProtocol::startDiscover()
 {
-    ServicesMulticast::sendMulticast();
+
     threadListener = ServicesMulticast::threadListener();
+    ServicesMulticast::sendMulticast();
     threadServerSocket = ServicesSocket::thread_server();
 
-    //pthread_t threadPing;
-    //pthread_create(&threadPing,NULL, &DiscoverProtocol::checkPlayer, NULL);
+    threadPing;
+    pthread_create(&threadPing,NULL, &DiscoverProtocol::checkPlayer, NULL);
 
 
     while(true)
@@ -40,8 +42,9 @@ void DiscoverProtocol::startDiscover()
         if(!loginAndAddress.empty())
         {
             int indexOfSlash = (int)loginAndAddress.find('/');
-            string ipAddress = loginAndAddress.substr(0, indexOfSlash-1);
+            string ipAddress = loginAndAddress.substr(0, indexOfSlash);
             string playerName = loginAndAddress.substr(indexOfSlash+1, loginAndAddress.size()-1);
+            cout << "IP : " + ipAddress + "  player : " + playerName << endl;
 
             //on verifie si le joeuur est déjà dans le tableau
             bool alreadyInTab = false;
@@ -64,13 +67,11 @@ void DiscoverProtocol::startDiscover()
                 pthread_mutex_unlock(&mutex_playerList);
 
                 ServicesMulticast::sendMulticast();
-                pthread_cancel(threadListener);
+
                 for(int i=0; i<DiscoverProtocol::playerList.size(); i++)
                 {
                     Player* p = DiscoverProtocol::playerList[i];
                     cout << "Name : " << p->getName() << " IP : " << p->getAddress() << " is connected" << endl;
-                    cout << "testserver | address : " + p->getAddress() << endl;
-                    Socket::clientSocket("PING", p->getAddress());
                 }
             }
         }
@@ -99,13 +100,13 @@ void* DiscoverProtocol::checkPlayer(void* arg)
                 Player* p = DiscoverProtocol::playerList[i];
                 cout << "testserver | address :  " + p->getAddress() << endl;
                 Socket::clientSocket("PING", p->getAddress());
-                int r = 0;
+                /*int r = 0;
                 r = Socket::serverSocket();
 
                 if(r==0)
                 {
                     DiscoverProtocol::playerList.erase(DiscoverProtocol::playerList.begin()+i);
-                }
+                }*/
             }
         }
     }
