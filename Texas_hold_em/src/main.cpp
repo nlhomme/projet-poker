@@ -16,13 +16,13 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    /*string playerName;
+    string playerName;
     getline(cin, playerName);
     Multicast::setPlayerName(playerName);
 
     DiscoverProtocol* dp = new DiscoverProtocol();
     dp->startDiscover();
-    dp->stopDiscover();*/
+    //dp->stopDiscover();
 
     //test multicast
     /*string playerName;
@@ -68,14 +68,14 @@ int main(int argc, char *argv[])
     {
             Multicast::clientMulti();
     }*/
-    string hostname;
+    /*string hostname;
     cout << "Hostname : ";
     getline(cin, hostname);
     ServicesSocket::setHostname(hostname);
 
     ServicesSocket::thread_server();
     /*Service de chat*/
-    ServicesSocket::thread_messenger();
+    /*ServicesSocket::thread_messenger();
     string msg;
     getline(cin, msg);
     /*Envoie UN message*/
@@ -83,12 +83,12 @@ int main(int argc, char *argv[])
 
     /*pour pour récupérer un message en continu
     fair ça avec un thread ?*/
-   while(true){
+   /*while(true){
         string msg = ServicesSocket::getMessage(); /*récupére un message*/
-        if(!msg.empty())
+        /*if(!msg.empty())
         {
             cout << msg << endl;
         }
-    }
+    }*/
 
 }
