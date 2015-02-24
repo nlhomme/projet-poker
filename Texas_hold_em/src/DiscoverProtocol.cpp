@@ -55,7 +55,7 @@ void DiscoverProtocol::startDiscover()
                         cout << "test 2" << endl;
                         alreadyInTab = true;
                     }
-                pthread_mutex_lock(&mutex_playerList);
+                pthread_mutex_unlock(&mutex_playerList);
             }
 
             if(playerName != Multicast::getPlayerName() && !alreadyInTab)
