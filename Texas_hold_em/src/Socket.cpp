@@ -22,8 +22,17 @@ void Socket::clientSocket(string msg, string hostname)
     SOCKADDR_IN sin = {0}; //initialise la structutre avec des zeros
 
     inet_aton(hostname.c_str(), &sin.sin_addr);
+/*
+    hostinfo = gethostbyname(hostname.c_str());
+    cout << "ip : " + hostname + " / " + hostinfo->h_addr << endl;
 
-    //sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; //adresse
+    if(hostinfo == NULL)
+    {
+        cout << "Unknown host :" << hostname << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; //adresse*/
     sin.sin_port = htons(PORT);
     sin.sin_family = AF_INET;
 

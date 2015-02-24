@@ -21,7 +21,7 @@ DiscoverProtocol::~DiscoverProtocol()
     cout << "Destroy" << endl;
     pthread_cancel(threadListener);
     pthread_cancel(threadServerSocket);
-    pthread_cancel(threadPing);
+    //pthread_cancel(threadPing);
 }
 
 void DiscoverProtocol::startDiscover()
