@@ -29,8 +29,8 @@ void DiscoverProtocol::startDiscover()
     threadListener = ServicesMulticast::threadListener();
     threadServerSocket = ServicesSocket::thread_server();
 
-    pthread_t thread;
-    //pthread_create(&thread,NULL, &DiscoverProtocol::checkPlayer, NULL);
+    //pthread_t threadPing;
+    //pthread_create(&threadPing,NULL, &DiscoverProtocol::checkPlayer, NULL);
 
 
     while(true)
@@ -47,12 +47,10 @@ void DiscoverProtocol::startDiscover()
             bool alreadyInTab = false;
             for(int i=0; i<DiscoverProtocol::playerList.size(); i++)
             {
-                cout << "test 1" << endl;
                 pthread_mutex_lock(&mutex_playerList);
                     Player* p = DiscoverProtocol::playerList[i];
                     if(p->getName() == playerName && p->getAddress()==ipAddress)
                     {
-                        cout << "test 2" << endl;
                         alreadyInTab = true;
                     }
                 pthread_mutex_unlock(&mutex_playerList);
@@ -71,6 +69,8 @@ void DiscoverProtocol::startDiscover()
                 {
                     Player* p = DiscoverProtocol::playerList[i];
                     cout << "Name : " << p->getName() << " IP : " << p->getAddress() << " is connected" << endl;
+                    cout << "testserver | address : " + p->getAddress() << endl;
+                    Socket::clientSocket("PING", p->getAddress());
                 }
             }
         }
@@ -97,6 +97,7 @@ void* DiscoverProtocol::checkPlayer(void* arg)
             for(int i=0; i<DiscoverProtocol::playerList.size(); i++)
             {
                 Player* p = DiscoverProtocol::playerList[i];
+                cout << "testserver | address :  " + p->getAddress() << endl;
                 Socket::clientSocket("PING", p->getAddress());
                 int r = 0;
                 r = Socket::serverSocket();
