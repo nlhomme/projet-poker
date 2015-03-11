@@ -56,7 +56,7 @@ void DiscoverProtocol::startDiscover()
             //on récupére notre propre ip
             if(playerName==Multicast::getPlayerName())
             {
-                DiscoverProtocol::myIp = playerName;
+                DiscoverProtocol::myIp = ipAddress;
             }
             //on verifie si le joeuur est déjà dans le tableau
             bool alreadyInTab = false;
@@ -134,7 +134,9 @@ void* DiscoverProtocol::pingPlayers(void* arg)
                 Player* p = DiscoverProtocol::playerList[i];
                 //Socket::clientSocket("PING", p->getAddress());
                 cout << p->getAddress() << endl;
-                ServicesSocket::sendAMessage("PING/" + DiscoverProtocol::myIp, p->getAddress());
+                string head = HEADPING + '/';
+                string msg = head + Multicast::getLocalAddress();
+                ServicesSocket::sendAMessage(msg, p->getAddress());
                 /*  envoyer message de type PING/{ip address} où l'adresse ip est celle du programme
                     ensuite lancer un thread avec check player
                 */
