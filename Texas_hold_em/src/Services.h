@@ -9,15 +9,17 @@
 #include <stdlib.h>
 #include <iostream>
 #include <pthread.h>
-
+#include <vector>
 class ServicesSocket
 {
     public :
         static pthread_t thread_server();
-        static void sendAMessage(std::string msg);
+        static void sendAMessage(std::string msg, std::string hostname);
         static pthread_t thread_messenger();
         static void receivedMessage(std::string msg); /*permet au service de récupérer les messages envoyer par Socket*/
+        static void addMessage(std::string msg);
         static std::string getMessage(); /*Permet à une couche supérieur de récupérer les messages récupérer par Services*/
+        static std::vector<std::string>*  getMessages();
         static void setHostname(std::string hostname);
 
     private :
@@ -25,6 +27,7 @@ class ServicesSocket
         static void* sendMessenger(void* arg);
 
         static std::string message;
+        static std::vector<std::string>* messagesVector;
         static std::string hostname;
 };
 

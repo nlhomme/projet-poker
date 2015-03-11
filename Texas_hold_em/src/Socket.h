@@ -8,10 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netinet/in.h>
+#include <net/if.h>
 #include <arpa/inet.h>
 #include <unistd.h> /* close */
 #include <netdb.h> /* gethostbyname */
@@ -32,6 +35,7 @@ class Socket
     public:
         static void clientSocket(std::string msg, std::string hostname);
         static int serverSocket();
+        static std::string getMyIp();
 };
 
 #endif // SOCKET_H

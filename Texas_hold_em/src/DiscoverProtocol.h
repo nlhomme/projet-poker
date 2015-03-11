@@ -23,11 +23,18 @@ class DiscoverProtocol
         std::vector<Player*> getPlayerList();
     protected:
     private:
-        static void* checkPlayer(void* arg);
+        static std::string myIp;
+        //ping les jouerus pour vérifier leurs connections
+        static void* pingPlayers(void* arg);
+        //verirfie si le joueur à répondu au ping et le supprime si pas de réponse
+        static void* checkPlayer(void* ip);
+        //répond au ping
+        static void* pingResponse(void *arg);
 
         pthread_t threadListener;
         pthread_t threadServerSocket;
         pthread_t threadPing;
+        pthread_t threadPingListener;
         pthread_mutex_t mutex_playerList;
         static std::vector<Player*> playerList;
 };

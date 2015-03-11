@@ -15,6 +15,7 @@ using namespace std;
 /*initialisation de la variable statique*/
 string ServicesSocket::message = "";
 string ServicesSocket::hostname = "";
+vector<string>* ServicesSocket::messagesVector = new vector<string>;
 
 /*Lance un listener*/
 void* ServicesSocket::startServer(void* arg)
@@ -86,16 +87,26 @@ string ServicesSocket::getMessage()
     }
 }
 
+vector<string>* ServicesSocket::getMessages()
+{
+    return ServicesSocket::messagesVector;
+}
+
+void ServicesSocket::addMessage(string msg)
+{
+    ServicesSocket::messagesVector->push_back(msg);
+}
+
 void ServicesSocket::setHostname(string hostname)
 {
     ServicesSocket::hostname = hostname;
 }
 
-void ServicesSocket::sendAMessage(string msg)
+void ServicesSocket::sendAMessage(string msg, string hostname)
 {
     if(!msg.empty())
     {
-        Socket::clientSocket(msg, ServicesSocket::hostname);
+        Socket::clientSocket(msg, hostname);
     }
 }
 /************************************************************************************************************************************/
@@ -158,3 +169,5 @@ string ServicesMulticast::getMessage()
 
     return message;
 }
+
+

@@ -16,10 +16,12 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    //Socket::getMyIp();
     string playerName;
     getline(cin, playerName);
+    printf("test1");
     Multicast::setPlayerName(playerName);
-
+    printf("test2");
     DiscoverProtocol* dp = new DiscoverProtocol();
     dp->startDiscover();
     //dp->stopDiscover();
