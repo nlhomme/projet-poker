@@ -114,14 +114,14 @@ void* DiscoverProtocol::pingResponse(void* arg)
             int indexOfSlash = (int)m.find('/');
             string head = m.substr(0, indexOfSlash);
             string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
-            cout << "HEAD : " << head << "  IP : " << ipAddress << endl;
+            //cout << "HEAD : " << head << "  IP : " << ipAddress << endl;
             if(head == HEADPING)
             {
                 //cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
                 cout << "PONG" << endl;
                 string head = "RES/";
                 string msg = head + Multicast::getLocalAddress();
-                cout << "Test msg : " << msg << endl;
+                //cout << "Test msg : " << msg << endl;
                 ServicesSocket::sendAMessage(msg, ipAddress);
                 cout << "Joueur toujours là" << endl;
             }
