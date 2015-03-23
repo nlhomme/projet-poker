@@ -39,9 +39,8 @@ void DiscoverProtocol::startDiscover()
     threadServerSocket = ServicesSocket::thread_server();
 
     pthread_create(&threadPing,NULL, &DiscoverProtocol::pingPlayers, NULL);
-    pthread_create(&threadPingListener, NULL, &DiscoverProtocol::pingResponse, NULL);
+    //pthread_create(&threadPingListener, NULL, &DiscoverProtocol::pingResponse, NULL);
 
-    cout << "tesqt" << endl;
     while(true)
     {
         string loginAndAddress = ServicesMulticast::getMessage(); /*recoit le non du joueur et son adresse ip sous le format "192.168.6.6/ipName"*/
@@ -103,30 +102,28 @@ vector<Player*> DiscoverProtocol::getPlayerList()
 
 void* DiscoverProtocol::pingResponse(void* arg)
 {
-    while(true)
-    {
-        sleep(1);
-        cout << "response" << endl;
-        vector<string>* messagesVector = ServicesSocket::getMessages();
+    Player* p = (Player*) arg;
+    cout << "response" << endl;
+    vector<string>* messagesVector = ServicesSocket::getMessages();
 
-        if(messagesVector->size() > 0){
-            //on parcours toute la liste des messages àla recherche d'un message du type PING/[adresseIp]
-            for(int i=0; i<messagesVector->size(); i++)
+    if(messagesVector->size() > 0){
+        //on parcours toute la liste des messages àla recherche d'un message du type PING/[adresseIp]
+        for(int i=0; i<messagesVector->size(); i++)
+        {
+            string m = messagesVector->at(i);
+            int indexOfSlash = (int)m.find('/');
+            string head = m.substr(0, indexOfSlash);
+            string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
+            cout << "HEAD : " << head << "  IP : " << ipAddress << endl;
+            if(head == HEADPING)
             {
-                string m = messagesVector->at(i);
-                int indexOfSlash = (int)m.find('/');
-                string head = m.substr(0, indexOfSlash);
-                string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
-                cout << "HEAD : " << head << "  IP : " << ipAddress << endl;
-                if(head == HEADPING)
-                {
-                    cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
-                    string head = "RES/";
-                    string msg = head + Multicast::getLocalAddress();
-                    cout << "Test msg : " << msg << endl;
-                    ServicesSocket::sendAMessage(msg, ipAddress);
-
-                }
+                //cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
+                cout << "PONG" << endl;
+                string head = "RES/";
+                string msg = head + Multicast::getLocalAddress();
+                cout << "Test msg : " << msg << endl;
+                ServicesSocket::sendAMessage(msg, ipAddress);
+                cout << "Joueur toujours là" << endl;
             }
         }
     }
@@ -140,7 +137,7 @@ void* DiscoverProtocol::pingPlayers(void* arg)
         //Cool down pour éviter d'envoyer trop de ping à la secondes et surcharger la mémo
         if(DiscoverProtocol::playerList.size()>0 )
         {
-            cout << "ping" << endl;
+            cout << "PING" << endl;
             for(int i=0; i<DiscoverProtocol::playerList.size(); i++)
             {
                 Player* p = DiscoverProtocol::playerList[i];
@@ -148,11 +145,14 @@ void* DiscoverProtocol::pingPlayers(void* arg)
 
                 string head = "PING/";
                 string msg = head + Multicast::getLocalAddress();
-                cout << "Test msg : " << msg << endl;
+                //cout << "Test msg : " << msg << endl;
                 ServicesSocket::sendAMessage(msg, p->getAddress());
                 /*  envoyer message de type PING/{ip address} où l'adresse ip est celle du programme
-                    ensuite lancer un thread avec check player
+                    ensuite lancer un thread avec pingResponse, la comparaison avec le joueur se fera dans cette fonction
                 */
+                //lance un thread pour la reponse au ping
+                pthread_t threadPingListener;
+                pthread_create(&threadPingListener, NULL, &DiscoverProtocol::pingResponse, p);
             }
         }
     }

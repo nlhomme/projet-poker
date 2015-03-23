@@ -34,7 +34,6 @@ class DiscoverProtocol
         pthread_t threadListener;
         pthread_t threadServerSocket;
         pthread_t threadPing;
-        pthread_t threadPingListener;
         pthread_mutex_t mutex_playerList;
         static std::vector<Player*> playerList;
 };
