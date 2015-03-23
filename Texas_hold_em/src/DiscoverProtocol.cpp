@@ -106,18 +106,20 @@ void* DiscoverProtocol::pingResponse(void* arg)
     cout << "response" << endl;
     vector<string>* messagesVector = ServicesSocket::getMessages();
 
-    //on parcours toute la liste des messages àla recherche d'un message du type PING/[adresseIp]
-    for(int i=0; i<messagesVector->size(); i++)
-    {
-        string m = messagesVector->at(i);
-        int indexOfSlash = (int)m.find('/');
-        string head = m.substr(0, indexOfSlash);
-        string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
-
-        if(strcmp(head.c_str(), HEADPING))
+    if(messagesVector->size() > 0){
+        //on parcours toute la liste des messages àla recherche d'un message du type PING/[adresseIp]
+        for(int i=0; i<messagesVector->size(); i++)
         {
-            cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
-            /* send message avec mon ip à l'adresse ip récupérée + suppresion du message.*/
+            string m = messagesVector->at(i);
+            int indexOfSlash = (int)m.find('/');
+            string head = m.substr(0, indexOfSlash);
+            string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
+
+            if(strcmp(head.c_str(), HEADPING))
+            {
+                cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
+                /* send message avec mon ip à l'adresse ip récupérée + suppresion du message.*/
+            }
         }
     }
 }
@@ -126,16 +128,19 @@ void* DiscoverProtocol::pingPlayers(void* arg)
 {
     while(true)
     {
-        if(DiscoverProtocol::playerList.size()>0)
+        sleep(1);
+        //Cool down pour éviter d'envoyer trop de ping à la secondes et surcharger la mémo
+        if(DiscoverProtocol::playerList.size()>0 )
         {
             cout << "ping" << endl;
             for(int i=0; i<DiscoverProtocol::playerList.size(); i++)
             {
                 Player* p = DiscoverProtocol::playerList[i];
                 //Socket::clientSocket("PING", p->getAddress());
-                cout << p->getAddress() << endl;
-                string head = HEADPING + '/';
+
+                string head = "PING/";
                 string msg = head + Multicast::getLocalAddress();
+                cout << "Test msg : " << msg << endl;
                 ServicesSocket::sendAMessage(msg, p->getAddress());
                 /*  envoyer message de type PING/{ip address} où l'adresse ip est celle du programme
                     ensuite lancer un thread avec check player
