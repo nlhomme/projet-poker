@@ -122,9 +122,26 @@ void* DiscoverProtocol::pingResponse(void* arg)
                     cout << "PONG" << endl;
                     string head = "RES/";
                     string msg = head + Multicast::getLocalAddress();
+
+                    //verifie si le joueur est nouveau, si il l'est on l'ajoute.
+                    //Il faudra pensé à ajouter le nom du joueur dans les envoie de ping et tout.
+                    bool newPlayer = true;
+                    for(int i=0; i< playerList.size(); i++)
+                    {
+                        Player* player = playerList.at(i);
+
+                        if(player->getAddress()== ipAddress)
+                        {
+                            newPlayer = false;
+                        }
+                    }
+                    if(newPlayer)
+                    {
+                        playerList.push_back(new Player("test", ipAddress));
+                    }
+
                     //cout << "Test msg : " << msg << endl;
                     ServicesSocket::sendAMessage(msg, ipAddress);
-                    cout << "Joueur toujours là" << endl;
                 }
             }
         }
@@ -181,6 +198,7 @@ void* DiscoverProtocol::checkPlayer(void* arg)
             if(ipPlayer == ipAddress)
             {
                 playerIsActive = true;
+                cout << "Joueur toujours là" << endl;
             }
         }
     }
