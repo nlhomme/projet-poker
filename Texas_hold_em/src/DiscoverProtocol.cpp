@@ -103,22 +103,30 @@ vector<Player*> DiscoverProtocol::getPlayerList()
 
 void* DiscoverProtocol::pingResponse(void* arg)
 {
-    cout << "response" << endl;
-    vector<string>* messagesVector = ServicesSocket::getMessages();
+    while(true)
+    {
+        sleep(1);
+        cout << "response" << endl;
+        vector<string>* messagesVector = ServicesSocket::getMessages();
 
-    if(messagesVector->size() > 0){
-        //on parcours toute la liste des messages àla recherche d'un message du type PING/[adresseIp]
-        for(int i=0; i<messagesVector->size(); i++)
-        {
-            string m = messagesVector->at(i);
-            int indexOfSlash = (int)m.find('/');
-            string head = m.substr(0, indexOfSlash);
-            string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
-
-            if(strcmp(head.c_str(), HEADPING))
+        if(messagesVector->size() > 0){
+            //on parcours toute la liste des messages àla recherche d'un message du type PING/[adresseIp]
+            for(int i=0; i<messagesVector->size(); i++)
             {
-                cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
-                /* send message avec mon ip à l'adresse ip récupérée + suppresion du message.*/
+                string m = messagesVector->at(i);
+                int indexOfSlash = (int)m.find('/');
+                string head = m.substr(0, indexOfSlash);
+                string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
+                cout << "HEAD : " << head << "  IP : " << ipAddress << endl;
+                if(head == HEADPING)
+                {
+                    cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
+                    string head = "RES/";
+                    string msg = head + Multicast::getLocalAddress();
+                    cout << "Test msg : " << msg << endl;
+                    ServicesSocket::sendAMessage(msg, ipAddress);
+
+                }
             }
         }
     }
