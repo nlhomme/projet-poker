@@ -118,8 +118,6 @@ void* DiscoverProtocol::pingResponse(void* arg)
                 //cout << "HEAD : " << head << "  IP : " << ipAddress << endl;
                 if(head == HEADPING)
                 {
-                    //cout << "j'ai reçu : " << m << " | Head : " << head << " | IP : " << ipAddress << endl;
-                    cout << "PONG" << endl;
                     string head = "RES/";
                     string msg = head + Multicast::getLocalAddress();
 
@@ -129,6 +127,8 @@ void* DiscoverProtocol::pingResponse(void* arg)
                     for(int j=0; j< playerList.size(); j++)
                     {
                         Player* player = playerList.at(j);
+
+                        cout << "PONG : " << player->getName() << endl;
 
                         if(player->getAddress()== ipAddress)
                         {
@@ -140,7 +140,6 @@ void* DiscoverProtocol::pingResponse(void* arg)
                         playerList.push_back(new Player("test", ipAddress));
                     }
 
-                    //cout << "Test msg : " << msg << endl;
                     messagesVector->erase(messagesVector->begin() + i);
                     ServicesSocket::sendAMessage(msg, ipAddress);
                 }
@@ -153,19 +152,19 @@ void* DiscoverProtocol::pingPlayers(void* arg)
 {
     while(true)
     {
-        sleep(1);
         //Cool down pour éviter d'envoyer trop de ping à la secondes et surcharger la mémo
+        sleep(1);
+
         if(DiscoverProtocol::playerList.size()>0 )
         {
-            cout << "PING" << endl;
             for(int i=0; i<DiscoverProtocol::playerList.size(); i++)
             {
                 Player* p = DiscoverProtocol::playerList[i];
-                //Socket::clientSocket("PING", p->getAddress());
+                cout << "PING : " << p->getName() << endl;
 
                 string head = "PING/";
                 string msg = head + Multicast::getLocalAddress();
-                //cout << "Test msg : " << msg << endl;
+
                 ServicesSocket::sendAMessage(msg, p->getAddress());
                 /*  envoyer message de type PING/{ip address} où l'adresse ip est celle du programme
                     ensuite lancer un thread avec checkPlayer
@@ -199,7 +198,7 @@ void* DiscoverProtocol::checkPlayer(void* arg)
             {
                 messagesVector->erase(messagesVector->begin() + i);
                 playerIsActive = true;
-                cout << "Joueur toujours là" << endl;
+                cout << "Joueur : " << player->getName() << "toujours là" << endl;
             }
         }
     }
