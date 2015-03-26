@@ -126,9 +126,9 @@ void* DiscoverProtocol::pingResponse(void* arg)
                     //verifie si le joueur est nouveau, si il l'est on l'ajoute.
                     //Il faudra pensé à ajouter le nom du joueur dans les envoie de ping et tout.
                     bool newPlayer = true;
-                    for(int i=0; i< playerList.size(); i++)
+                    for(int j=0; j< playerList.size(); j++)
                     {
-                        Player* player = playerList.at(i);
+                        Player* player = playerList.at(j);
 
                         if(player->getAddress()== ipAddress)
                         {
@@ -141,6 +141,7 @@ void* DiscoverProtocol::pingResponse(void* arg)
                     }
 
                     //cout << "Test msg : " << msg << endl;
+                    messagesVector->erase(messagesVector->begin() + i);
                     ServicesSocket::sendAMessage(msg, ipAddress);
                 }
             }
