@@ -28,7 +28,7 @@ DiscoverProtocol::~DiscoverProtocol()
     cout << "Destroy" << endl;
     pthread_cancel(threadListener);
     pthread_cancel(threadServerSocket);
-    //pthread_cancel(threadPing);
+    pthread_cancel(threadPing);
 }
 
 void DiscoverProtocol::startDiscover()
@@ -172,7 +172,6 @@ void* DiscoverProtocol::pingPlayers(void* arg)
                 //lance un thread pour checker les players
                 pthread_t threadCheckPlayer;
                 pthread_create(&threadCheckPlayer,NULL, &DiscoverProtocol::checkPlayer, p);
-
             }
         }
     }
@@ -197,6 +196,7 @@ void* DiscoverProtocol::checkPlayer(void* arg)
         {
             if(ipPlayer == ipAddress)
             {
+                messagesVector->erase(messagesVector->begin() + i);
                 playerIsActive = true;
                 cout << "Joueur toujours là" << endl;
             }
