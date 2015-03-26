@@ -104,7 +104,7 @@ void* DiscoverProtocol::pingResponse(void* arg)
     while(true)
     {
         sleep(1);
-        cout << "response" << endl;
+
         vector<string>* messagesVector = ServicesSocket::getMessages();
 
         if(messagesVector->size() > 0){
@@ -115,7 +115,7 @@ void* DiscoverProtocol::pingResponse(void* arg)
                 int indexOfSlash = (int)m.find('/');
                 string head = m.substr(0, indexOfSlash);
                 string ipAddress = m.substr(indexOfSlash+1, m.size()-1);
-                //cout << "HEAD : " << head << "  IP : " << ipAddress << endl;
+
                 if(head == HEADPING)
                 {
                     string head = "RES/";
@@ -137,7 +137,7 @@ void* DiscoverProtocol::pingResponse(void* arg)
                     }
                     if(newPlayer)
                     {
-                        playerList.push_back(new Player("test", ipAddress));
+                        //playerList.push_back(new Player("test", ipAddress));
                     }
 
                     messagesVector->erase(messagesVector->begin() + i);
@@ -198,20 +198,21 @@ void* DiscoverProtocol::checkPlayer(void* arg)
             {
                 messagesVector->erase(messagesVector->begin() + i);
                 playerIsActive = true;
-                cout << "Joueur : " << player->getName() << "toujours là" << endl;
+                cout << "Joueur " << player->getName() << " toujours là : " << playerIsActive <<  endl;
             }
         }
     }
 
     if(!playerIsActive)
     {
+        cout << "test erase" << endl;
         for(int i=0; i< playerList.size(); i++)
         {
             Player* player = playerList.at(i);
 
             if(player->getAddress()== ipPlayer)
             {
-                playerList.erase(playerList.begin() + i);
+                //playerList.erase(playerList.begin() + i);
             }
         }
     }
